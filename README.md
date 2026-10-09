@@ -2,6 +2,8 @@
 
 Archify 图表查看器的静态资源包。HTML 保存图表 JSON，公共 JS 负责解析与交互，公共 CSS 提供统一样式。支持架构图、流程图、时序图、数据流图和生命周期图。
 
+[演示与使用](https://sonder9999.github.io/archify_pages/) · [GitHub 仓库](https://github.com/Sonder9999/archify_pages)
+
 ## 目录
 
 ```text
