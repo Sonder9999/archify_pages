@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Archify 图表演示与使用入口：五种图表，共用 JS/CSS，以 HTML 分享或通过 iframe 嵌入。">
+  <title>Archify · 演示与使用</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1018;--panel:#121925;--line:#283243;--text:#edf2f8;--muted:#a3afc1;--accent:#54d4cf}
+    *{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:24px}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.65 system-ui,-apple-system,"Segoe UI",sans-serif}
+    a{color:inherit;text-decoration:none}button,input,select{font:inherit}button,a,input,select{-webkit-tap-highlight-color:transparent}button{cursor:pointer}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+    .wrap{width:min(1160px,calc(100% - 64px));margin:auto}header{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:28px 0;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:12px;font-size:21px;font-weight:750;letter-spacing:-.6px}.brand svg{width:30px;height:30px;color:var(--accent)}nav{display:flex;gap:26px;font-size:14px;color:var(--muted)}nav a:hover{color:var(--text)}
+    .hero{display:grid;grid-template-columns:1.2fr 1fr;gap:60px;align-items:center;padding:68px 0 60px}.eyebrow{font:12px/1.5 ui-monospace,Consolas,monospace;letter-spacing:2px;color:var(--accent);margin:0 0 17px}h1{font-size:clamp(32px,4vw,48px);line-height:1.24;letter-spacing:-1.8px;margin:0 0 22px;font-weight:750}.intro{color:var(--muted);max-width:510px;margin:0;font-size:16px;line-height:1.9}.hero-links{display:flex;gap:14px;align-items:center;margin-top:28px}.primary{display:inline-flex;align-items:center;gap:24px;padding:10px 17px;border-radius:8px;background:var(--accent);color:#07201f;font-weight:650}.secondary{padding:10px 12px;color:var(--muted)}.secondary:hover{color:var(--text)}
+    .pipeline{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:27px}.pipeline-title{display:flex;justify-content:space-between;gap:16px;font:12px/1.5 ui-monospace,Consolas,monospace;color:var(--muted);margin-bottom:25px}.pipeline-title span:last-child{color:var(--accent)}.flow{display:flex;align-items:center;gap:12px}.flow-box{flex:1;min-width:0;border:1px solid #354257;border-radius:9px;padding:16px 7px;text-align:center;font:600 16px/1.6 ui-monospace,Consolas,monospace}.flow-box small{display:block;font:12px/1.8 system-ui,sans-serif;color:var(--muted)}.flow-arrow{color:var(--accent)}.shared{display:flex;gap:10px;align-items:center;justify-content:center;margin-top:21px;font-size:12px;color:var(--muted)}.shared code{border:1px solid var(--line);border-radius:5px;padding:3px 9px;color:var(--accent)}
+    section{margin-bottom:54px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:20px;margin-bottom:22px}h2{font-size:24px;line-height:1.4;letter-spacing:-.6px;margin:0 0 6px}.section-head p{margin:0;color:var(--muted);font-size:14px}.version{display:flex;align-items:center;gap:10px;white-space:nowrap;color:var(--muted);font-size:13px}.version select{border:1px solid var(--line);border-radius:7px;background:var(--panel);color:var(--text);padding:7px 29px 7px 12px}
+    .demos{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}.demo{--ink:var(--accent);display:flex;flex-direction:column;border:1px solid var(--line);border-radius:11px;background:var(--panel);padding:18px;transition:border-color .15s,transform .15s}.demo:hover{border-color:var(--ink);transform:translateY(-3px)}.demo-tag{color:var(--ink);font-size:12px;font-weight:600}.demo svg{width:100%;height:68px;margin:18px 0 16px;color:var(--ink);overflow:visible}.demo h3{margin:0 0 7px;font-size:16px;line-height:1.5}.demo p{color:var(--muted);font-size:13px;line-height:1.7;margin:0 0 22px}.demo-open{display:flex;justify-content:space-between;font-size:12px;color:var(--ink);margin-top:auto}.workflow{--ink:#a69afd}.sequence{--ink:#7eb5ff}.dataflow{--ink:#edba6c}.lifecycle{--ink:#f29ead}
+    .usage{border:1px solid var(--line);border-radius:13px;background:var(--panel);overflow:hidden}.asset-config{padding:23px 24px;border-bottom:1px solid var(--line)}.asset-config label{display:block;font-size:13px;margin-bottom:9px;font-weight:600}.address{display:flex;gap:12px;align-items:center}.address input{width:100%;min-width:0;border:1px solid #354257;border-radius:7px;background:var(--bg);color:var(--text);padding:10px 12px;font:13px/1.5 ui-monospace,Consolas,monospace}.helper{font-size:12px;color:var(--muted);margin:9px 0 0}.helper.error{color:#ffa5a5}.asset-list{display:grid;grid-template-columns:1fr 1fr;gap:0}.asset{padding:18px 24px;border-bottom:1px solid var(--line);min-width:0}.asset:first-child{border-right:1px solid var(--line)}.asset-label{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:7px}.asset-label a{font:13px/1.6 ui-monospace,Consolas,monospace;color:var(--accent)}.asset-label a:hover{text-decoration:underline}.asset code{display:block;font:12px/1.65 ui-monospace,Consolas,monospace;color:var(--muted);overflow-wrap:anywhere}.copy{border:1px solid #354257;border-radius:6px;background:transparent;color:var(--text);padding:4px 11px;font-size:12px}.copy:hover{border-color:var(--accent);color:var(--accent)}.copy:disabled{opacity:.4;cursor:not-allowed}
+    .snippet-head{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 24px}.tabs{display:flex;gap:6px}.tabs button{border:0;border-radius:6px;background:transparent;color:var(--muted);font-size:13px;padding:6px 12px;white-space:nowrap}.tabs button[aria-pressed="true"]{color:var(--text);background:#263145}.snippet{margin:0 24px 18px;padding:18px;background:var(--bg);border:1px solid var(--line);border-radius:8px;font:12px/1.8 ui-monospace,Consolas,monospace;overflow:auto;max-height:375px;tab-size:2}.snippet-note{padding:0 24px 22px;margin:0;color:var(--muted);font-size:12px}.principles{display:flex;flex-wrap:wrap;gap:12px 28px;color:var(--muted);font-size:12px;margin-top:17px}.principles span::before{content:'·';color:var(--accent);margin-right:8px}
+    footer{display:flex;justify-content:space-between;gap:20px;border-top:1px solid var(--line);padding:22px 0 30px;font-size:12px;color:var(--muted)}footer a:hover{color:var(--text)}.status{position:fixed;left:50%;bottom:25px;transform:translateX(-50%);border-radius:8px;background:#263145;border:1px solid #45516a;color:var(--text);padding:10px 18px;font-size:13px;z-index:2}.status:empty{display:none}
+    @media(max-width:1000px){.hero{gap:30px}.demos{grid-template-columns:repeat(3,minmax(0,1fr))}.demo svg{max-width:180px}.hero h1{font-size:38px}}
+    @media(max-width:650px){.wrap{width:calc(100% - 32px)}header{padding:21px 0}nav{gap:17px}.hero{grid-template-columns:1fr;gap:28px;padding:38px 0}.hero h1{font-size:34px}.pipeline{padding:23px}.demos{grid-template-columns:repeat(2,minmax(0,1fr))}.demo{padding:15px}.section-head{align-items:start}.section-head p{max-width:230px}.version{flex-direction:column;align-items:end;gap:5px}.asset-list{grid-template-columns:1fr}.asset:first-child{border-right:0}.asset-config,.asset{padding:18px}.snippet-head{padding:13px 18px}.snippet{margin:0 18px 14px}.snippet-note{padding:0 18px 18px}.principles{gap:7px 18px}section{margin-bottom:38px}footer{flex-wrap:wrap}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.demo{transition:none}.demo:hover{transform:none}}
+    @media(max-width:360px){.snippet-head{padding:13px 12px;gap:6px}.tabs{gap:2px}.tabs button{padding:6px 8px;font-size:12px}.snippet-head .copy{padding:4px 8px;white-space:nowrap}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <a class="brand" href="./index.html" aria-label="Archify 首页"><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M7 8h16M7 8v15h16" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="4" width="8" height="8" rx="2" fill="currentColor"/><rect x="19" y="4" width="8" height="8" rx="2" fill="currentColor" opacity=".45"/><rect x="19" y="19" width="8" height="8" rx="2" fill="currentColor" opacity=".8"/></svg>Archify</a>
+      <nav aria-label="主导航"><a href="#demos">图表演示</a><a href="#usage">使用方式</a></nav>
+    </header>
+    <main>
+      <div class="hero">
+        <div>
+          <p class="eyebrow">DIAGRAMS, SHARED RUNTIME</p>
+          <h1>图表内容，统一展示。</h1>
+          <p class="intro">用 JSON 描述图表，以 HTML 分享。五种图表共用同一套 JS 与 CSS，也能通过 iframe 嵌入网页与博客。</p>
+          <div class="hero-links"><a class="primary" href="#demos">查看演示 <span aria-hidden="true">↗</span></a><a class="secondary" href="#usage">复制引用方式 →</a></div>
+        </div>
+        <div class="pipeline" aria-label="JSON 内嵌于 HTML，由公共 JS 和 CSS 展示为图表">
+          <div class="pipeline-title"><span>CONTENT → PRESENTATION</span><span>5 TYPES</span></div>
+          <div class="flow"><div class="flow-box">JSON<small>图表内容</small></div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-box">HTML<small>分享页面</small></div><span class="flow-arrow" aria-hidden="true">→</span><div class="flow-box">图表<small>阅读与交互</small></div></div>
+          <div class="shared"><span>公共资源</span><code>JS</code><span>+</span><code>CSS</code></div>
+        </div>
+      </div>
+      <section id="demos" aria-labelledby="demos-heading">
+        <div class="section-head"><div><h2 id="demos-heading">五种图表，一套体验</h2><p>用 Archify 的组成与使用过程，了解每一种图。</p></div><label class="version" for="version">资源版本<select id="version"><option value="0.1.0">0.1.0</option></select></label></div>
+        <div class="demos">
+          <a class="demo" data-demo="archify-overview.architecture.html" href="runtime/0.1.0/archify-overview.architecture.html">
+            <span class="demo-tag">架构图</span><svg viewBox="0 0 160 68" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M39 20h37m25 0h33M87 30v21H39"/><rect x="9" y="10" width="30" height="20" rx="4"/><rect x="76" y="10" width="30" height="20" rx="4"/><rect x="134" y="10" width="20" height="20" rx="4"/><rect x="9" y="41" width="30" height="20" rx="4"/></g></svg>
+            <h3>Archify 的组成</h3><p>HTML、公共资源与交互查看器如何配合。</p><span class="demo-open">打开演示 <span aria-hidden="true">↗</span></span>
+          </a>
+          <a class="demo workflow" data-demo="archify-authoring.workflow.html" href="runtime/0.1.0/archify-authoring.workflow.html">
+            <span class="demo-tag">流程图</span><svg viewBox="0 0 160 68" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M36 18h29m30 0h31M80 29v23h46"/><rect x="6" y="8" width="30" height="20" rx="4"/><path d="m80 3 15 15-15 15-15-15Z"/><rect x="126" y="8" width="28" height="20" rx="4"/><rect x="126" y="42" width="28" height="20" rx="4"/></g></svg>
+            <h3>制作与分享</h3><p>从定义内容，到生成页面、检查和嵌入。</p><span class="demo-open">打开演示 <span aria-hidden="true">↗</span></span>
+          </a>
+          <a class="demo sequence" data-demo="archify-loading.sequence.html" href="runtime/0.1.0/archify-loading.sequence.html">
+            <span class="demo-tag">时序图</span><svg viewBox="0 0 160 68" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5"><rect x="8" y="3" width="30" height="13" rx="3"/><rect x="66" y="3" width="30" height="13" rx="3"/><rect x="124" y="3" width="30" height="13" rx="3"/><path d="M23 20v46m58-46v46m58-46v46" stroke-dasharray="3 4"/><path d="M23 30h58l-5-4m5 17h58l-5-4m5 16H23l5-4"/></g></svg>
+            <h3>浏览器加载</h3><p>页面读取、资源加载与图表渲染的先后。</p><span class="demo-open">打开演示 <span aria-hidden="true">↗</span></span>
+          </a>
+          <a class="demo dataflow" data-demo="archify-transform.dataflow.html" href="runtime/0.1.0/archify-transform.dataflow.html">
+            <span class="demo-tag">数据流图</span><svg viewBox="0 0 160 68" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M34 19h22v15h13m-35 19h22V34m41 0h26"/><rect x="6" y="9" width="28" height="20" rx="4"/><rect x="6" y="43" width="28" height="20" rx="4"/><rect x="69" y="24" width="28" height="20" rx="4"/><rect x="123" y="24" width="30" height="20" rx="4"/></g></svg>
+            <h3>从数据到页面</h3><p>JSON 校验、布局编译与 SVG 图形输出。</p><span class="demo-open">打开演示 <span aria-hidden="true">↗</span></span>
+          </a>
+          <a class="demo lifecycle" data-demo="archify-release.lifecycle.html" href="runtime/0.1.0/archify-release.lifecycle.html">
+            <span class="demo-tag">生命周期图</span><svg viewBox="0 0 160 68" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="13" cy="21" r="6"/><path d="M19 21h23m32 0h23m31 0h19M112 32v23H58V32"/><rect x="42" y="10" width="32" height="22" rx="6"/><rect x="97" y="10" width="31" height="22" rx="6"/><circle cx="151" cy="21" r="4"/></g></svg>
+            <h3>版本维护</h3><p>准备、发布、保留旧版与选择升级。</p><span class="demo-open">打开演示 <span aria-hidden="true">↗</span></span>
+          </a>
+        </div>
+      </section>
+      <section id="usage" aria-labelledby="usage-heading">
+        <div class="section-head"><div><h2 id="usage-heading">接入你的页面</h2><p>引用公共资源，再放入自己的图表 JSON。</p></div></div>
+        <div class="usage">
+          <div class="asset-config"><label for="asset-base">资源根地址</label><div class="address"><input id="asset-base" type="url" value="https://static.example.com/archify" spellcheck="false" autocomplete="off" aria-describedby="base-help"></div><p class="helper" id="base-help">替换为实际资源地址；以下链接和代码会一起更新。</p></div>
+          <div class="asset-list">
+            <div class="asset"><div class="asset-label"><a id="js-link" href="runtime/0.1.0/archify.js">archify.js ↗</a><button class="copy" type="button" data-copy="js" aria-label="复制 JS 地址">复制地址</button></div><code id="js-url">runtime/0.1.0/archify.js</code></div>
+            <div class="asset"><div class="asset-label"><a id="css-link" href="runtime/0.1.0/archify.css">archify.css ↗</a><button class="copy" type="button" data-copy="css" aria-label="复制 CSS 地址">复制地址</button></div><code id="css-url">runtime/0.1.0/archify.css</code></div>
+          </div>
+          <div class="snippet-head"><div class="tabs" aria-label="引用示例"><button type="button" data-snippet="html" aria-pressed="true">HTML 页面</button><button type="button" data-snippet="iframe" aria-pressed="false">iframe 嵌入</button></div><button class="copy" type="button" data-copy="snippet">复制代码</button></div>
+          <pre class="snippet" tabindex="0" aria-label="引用代码"><code id="snippet">启用 JavaScript 后可生成引用示例；完整 HTML 示例也可在 README 中查看。</code></pre>
+          <p class="snippet-note" id="snippet-note">修改 diagram 中的内容，即可生成自己的架构图。</p>
+        </div>
+        <div class="principles"><span>JS、CSS 与 runtimeVersion 保持一致</span><span>单独分享 HTML 时使用完整 HTTPS 地址</span><span>多张图通过多个 iframe 展示</span></div>
+        <noscript><p class="helper">图表演示需要 JavaScript。启用后即可显示图表和复制引用代码。</p></noscript>
+      </section>
+    </main>
+    <footer><span>Archify · 内容与展示分离</span><div><a href="README.md">使用说明</a> <span aria-hidden="true"> / </span> <a href="LICENSE">代码与第三方许可</a></div></footer>
+  </div>
+  <div class="status" id="copy-status" role="status" aria-live="polite"></div>
+  <script>
+    (() => {
+      const version = document.getElementById('version');
+      const base = document.getElementById('asset-base');
+      const help = document.getElementById('base-help');
+      const output = document.getElementById('snippet');
+      const copyButtons = [...document.querySelectorAll('[data-copy]')];
+      const status = document.getElementById('copy-status');
+      const hosted = /^https?:$/.test(location.protocol);
+      const localHint = '本地预览使用示例域名，请替换为实际资源地址。';
+      base.value = hosted ? new URL('.', location.href).href.replace(/\/$/, '') : base.value;
+      let selected = 'html', snippets = {}, urls = {}, statusTimer;
+      function refresh() {
+        let root;
+        try {
+          root = new URL(base.value.trim());
+          if (!/^https?:$/.test(root.protocol) || root.username || root.password || root.search || root.hash) throw new Error('invalid');
+        } catch {
+          help.textContent = '请输入完整 HTTP 或 HTTPS 地址，不包含登录信息、查询参数或片段。';
+          help.classList.add('error'); base.setAttribute('aria-invalid', 'true');
+          copyButtons.forEach(button => button.disabled = true);
+          return;
+        }
+        help.classList.remove('error'); base.removeAttribute('aria-invalid');
+        help.textContent = !hosted && root.hostname === 'static.example.com' ? localHint : '以下资源地址和引用代码使用同一版本；分享时请确认地址可访问。';
+        copyButtons.forEach(button => button.disabled = false);
+        const prefix = root.href.replace(/\/$/, '') + '/runtime/' + version.value;
+        urls = {js: prefix + '/archify.js', css: prefix + '/archify.css'};
+        for (const kind of ['js', 'css']) {
+          document.getElementById(kind + '-url').textContent = urls[kind];
+          document.getElementById(kind + '-link').href = urls[kind];
+        }
+        document.querySelectorAll('[data-demo]').forEach(link => { link.href = 'runtime/' + version.value + '/' + link.dataset.demo; });
+        const data = {runtimeVersion:version.value, diagram:{schema_version:1, diagram_type:'architecture', meta:{title:'应用架构',locale:'zh-CN',output:'app.html'}, components:[{id:'web',type:'frontend',label:'网页',pos:[40,80],size:[160,80]},{id:'api',type:'backend',label:'API',pos:[300,80],size:[160,80]}], connections:[{id:'request',from:'web',to:'api',label:'HTTPS'}]}};
+        const closingScript = '</' + 'script>';
+        const attribute = value => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;');
+        snippets.html = '<!doctype html>\n<html lang="zh-CN" data-theme="dark" data-unified="true" data-motion="still">\n<head>\n  <meta charset="utf-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <title>应用架构</title>\n  <link rel="stylesheet" href="' + attribute(urls.css) + '">\n</head>\n<body>\n  <main id="archify-root" data-archify-root aria-busy="true">\n    <p id="archify-status" role="status">正在加载图表…</p>\n  </main>\n  <script id="archify-data" type="application/json">\n' + JSON.stringify(data, null, 2).replaceAll('<', '\\u003c') + '\n  ' + closingScript + '\n  <script src="' + attribute(urls.js) + '" defer>' + closingScript + '\n</body>\n</html>';
+        snippets.iframe = '<iframe\n  src="' + attribute(prefix) + '/archify-overview.architecture.html"\n  title="Archify 架构图演示"\n  width="100%"\n  height="720"\n  style="border: 0"\n  allowfullscreen>\n</iframe>';
+        showSnippet();
+      }
+      function showSnippet() {
+        output.textContent = snippets[selected] || '';
+        document.querySelectorAll('[data-snippet]').forEach(button => button.setAttribute('aria-pressed', String(button.dataset.snippet === selected)));
+        document.getElementById('snippet-note').textContent = selected === 'html' ? '这是可保存的完整页面。修改 diagram 中的内容，即可生成自己的架构图。' : '此示例嵌入架构图演示；将 src 替换为你托管的图表 HTML 地址。';
+      }
+      async function copy(value) {
+        try {
+          if (!navigator.clipboard?.writeText) throw new Error('clipboard unavailable');
+          await navigator.clipboard.writeText(value);
+        } catch {
+          const previous = document.activeElement;
+          const field = document.createElement('textarea');
+          field.value = value; field.style.cssText = 'position:fixed;left:-9999px;top:0';
+          document.body.append(field); field.select();
+          let copied = false;
+          try { copied = document.execCommand('copy'); } finally { field.remove(); previous?.focus({preventScroll:true}); }
+          if (!copied) throw new Error('copy failed');
+        }
+      }
+      document.querySelectorAll('[data-snippet]').forEach(button => button.addEventListener('click', () => { selected = button.dataset.snippet; showSnippet(); }));
+      copyButtons.forEach(button => button.addEventListener('click', async () => {
+        try { await copy(button.dataset.copy === 'snippet' ? snippets[selected] : urls[button.dataset.copy]); status.textContent = '已复制'; }
+        catch { status.textContent = '复制失败，请选中文字后手动复制。'; }
+        clearTimeout(statusTimer); statusTimer = setTimeout(() => status.textContent = '', 3000);
+      }));
+      base.addEventListener('input', refresh); version.addEventListener('change', refresh); refresh();
+    })();
+  </script>
+</body>
+</html>

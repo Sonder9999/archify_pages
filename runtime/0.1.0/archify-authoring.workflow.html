@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-unified="true" data-motion="still">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="generator" content="archify-general 0.1.0">
+<title>用 Archify 制作并分享一张图</title>
+<link rel="stylesheet" href="./archify.css" onerror="document.getElementById('archify-status').textContent='样式资源加载失败 / Stylesheet failed to load'">
+</head>
+<body>
+<main id="archify-root" data-archify-root aria-busy="true"><p id="archify-status" role="status">正在加载图表 / Loading diagram…</p></main>
+<script id="archify-data" type="application/json">
+{
+  "runtimeVersion": "0.1.0",
+  "diagram": {
+    "schema_version": 2,
+    "diagram_type": "workflow",
+    "meta": {
+      "title": "用 Archify 制作并分享一张图",
+      "subtitle": "Archify 演示 · 图表内容与公共资源分离",
+      "locale": "zh-CN",
+      "output": "archify-authoring.workflow.html",
+      "animation": "trace"
+    },
+    "lanes": [
+      {
+        "id": "content",
+        "label": "定义内容"
+      },
+      {
+        "id": "build",
+        "label": "生成与检查"
+      },
+      {
+        "id": "delivery",
+        "label": "分享与嵌入"
+      }
+    ],
+    "phases": [
+      {
+        "id": "define",
+        "label": "明确内容",
+        "fromCol": 0,
+        "toCol": 1
+      },
+      {
+        "id": "prepare",
+        "label": "生成页面",
+        "fromCol": 2,
+        "toCol": 3,
+        "variant": "emphasis"
+      },
+      {
+        "id": "deliver",
+        "label": "分发",
+        "fromCol": 4,
+        "toCol": 4
+      }
+    ],
+    "nodes": [
+      {
+        "id": "goal",
+        "lane": "content",
+        "col": 0,
+        "type": "external",
+        "label": "说明目标",
+        "sublabel": "图要回答什么问题",
+        "width": 174
+      },
+      {
+        "id": "type",
+        "lane": "content",
+        "col": 1,
+        "type": "frontend",
+        "label": "选择图表类型",
+        "sublabel": "结构、步骤或时间顺序",
+        "width": 174
+      },
+      {
+        "id": "json",
+        "lane": "build",
+        "col": 1,
+        "type": "database",
+        "label": "编写 JSON",
+        "sublabel": "节点、连线与说明",
+        "width": 174
+      },
+      {
+        "id": "html",
+        "lane": "build",
+        "col": 2,
+        "type": "backend",
+        "label": "生成 HTML",
+        "sublabel": "内嵌数据并引用资源",
+        "width": 174
+      },
+      {
+        "id": "check",
+        "lane": "build",
+        "col": 3,
+        "type": "security",
+        "label": "浏览器检查",
+        "sublabel": "文字、连线与交互",
+        "width": 174
+      },
+      {
+        "id": "share",
+        "lane": "delivery",
+        "col": 3,
+        "type": "cloud",
+        "label": "分享 HTML",
+        "sublabel": "使用完整资源地址",
+        "width": 174
+      },
+      {
+        "id": "embed",
+        "lane": "delivery",
+        "col": 4,
+        "type": "frontend",
+        "label": "网页内嵌",
+        "sublabel": "iframe 独立展示",
+        "width": 174
+      }
+    ],
+    "mainPath": [
+      "goal",
+      "type",
+      "json",
+      "html",
+      "check",
+      "share",
+      "embed"
+    ],
+    "edges": [
+      {
+        "id": "choose",
+        "from": "goal",
+        "to": "type",
+        "variant": "emphasis"
+      },
+      {
+        "id": "author",
+        "from": "type",
+        "to": "json",
+        "label": "整理内容",
+        "variant": "emphasis"
+      },
+      {
+        "id": "generate",
+        "from": "json",
+        "to": "html",
+        "variant": "emphasis"
+      },
+      {
+        "id": "inspect",
+        "from": "html",
+        "to": "check",
+        "variant": "emphasis"
+      },
+      {
+        "id": "accept",
+        "from": "check",
+        "to": "share",
+        "label": "检查通过",
+        "variant": "emphasis"
+      },
+      {
+        "id": "publish",
+        "from": "share",
+        "to": "embed",
+        "label": "托管页面",
+        "variant": "default"
+      }
+    ],
+    "cards": [
+      {
+        "dot": "cyan",
+        "title": "选择合适的图",
+        "items": [
+          "架构图展示组成；流程图展示步骤；时序图展示调用先后。",
+          "数据流图展示转换；生命周期图展示状态和版本演进。"
+        ]
+      },
+      {
+        "dot": "emerald",
+        "title": "先检查再分享",
+        "items": [
+          "浏览器检查图表加载、标签遮挡、连线和导出。",
+          "单独发送 HTML 时，JS/CSS 必须使用接收者可访问的完整 HTTPS 地址。"
+        ]
+      },
+      {
+        "dot": "violet",
+        "title": "嵌入博客",
+        "items": [
+          "将 HTML 托管成图表页面，再用 iframe 引用。",
+          "多张图使用多个 iframe，各自加载自己的数据。"
+        ]
+      }
+    ]
+  },
+  "options": {},
+  "compileOptions": {}
+}
+</script>
+<script src="./archify.js" defer onerror="document.getElementById('archify-status').textContent='查看器资源加载失败 / Viewer failed to load'"></script>
+</body>
+</html>

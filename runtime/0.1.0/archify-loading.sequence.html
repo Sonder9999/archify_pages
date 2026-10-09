@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-unified="true" data-motion="still">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="generator" content="archify-general 0.1.0">
+<title>浏览器如何加载一张 Archify 图</title>
+<link rel="stylesheet" href="./archify.css" onerror="document.getElementById('archify-status').textContent='样式资源加载失败 / Stylesheet failed to load'">
+</head>
+<body>
+<main id="archify-root" data-archify-root aria-busy="true"><p id="archify-status" role="status">正在加载图表 / Loading diagram…</p></main>
+<script id="archify-data" type="application/json">
+{
+  "runtimeVersion": "0.1.0",
+  "diagram": {
+    "schema_version": 1,
+    "diagram_type": "sequence",
+    "meta": {
+      "title": "浏览器如何加载一张 Archify 图",
+      "subtitle": "Archify 演示 · 图表内容与公共资源分离",
+      "locale": "zh-CN",
+      "output": "archify-loading.sequence.html",
+      "animation": "trace",
+      "viewBox": [
+        1080,
+        760
+      ],
+      "column_fit": "spread"
+    },
+    "participants": [
+      {
+        "id": "browser",
+        "type": "external",
+        "label": "浏览器",
+        "sublabel": "打开图表文件"
+      },
+      {
+        "id": "html",
+        "type": "frontend",
+        "label": "图表 HTML",
+        "sublabel": "标签与内嵌 JSON"
+      },
+      {
+        "id": "assets",
+        "type": "cloud",
+        "label": "资源服务",
+        "sublabel": "同版本 JS + CSS"
+      },
+      {
+        "id": "runtime",
+        "type": "backend",
+        "label": "Archify JS",
+        "sublabel": "解析、编译与交互"
+      }
+    ],
+    "segments": [
+      {
+        "from": 174,
+        "to": 285,
+        "label": "01 / 读取页面"
+      },
+      {
+        "from": 305,
+        "to": 410,
+        "label": "02 / 加载公共资源"
+      },
+      {
+        "from": 430,
+        "to": 640,
+        "label": "03 / 构建图表"
+      }
+    ],
+    "messages": [
+      {
+        "id": "open",
+        "from": "browser",
+        "to": "html",
+        "y": 205,
+        "label": "读取 HTML",
+        "variant": "emphasis"
+      },
+      {
+        "id": "data",
+        "from": "html",
+        "to": "browser",
+        "y": 260,
+        "label": "基础标签与 JSON 数据",
+        "variant": "return"
+      },
+      {
+        "id": "request",
+        "from": "browser",
+        "to": "assets",
+        "y": 335,
+        "label": "加载 archify.js / archify.css",
+        "variant": "emphasis"
+      },
+      {
+        "id": "resource",
+        "from": "assets",
+        "to": "browser",
+        "y": 390,
+        "label": "返回同版本资源",
+        "variant": "return"
+      },
+      {
+        "id": "mount",
+        "from": "browser",
+        "to": "runtime",
+        "y": 465,
+        "label": "运行 JS 并读取数据块",
+        "variant": "emphasis"
+      },
+      {
+        "id": "result",
+        "from": "runtime",
+        "to": "browser",
+        "y": 525,
+        "label": "生成 SVG 与交互界面",
+        "variant": "return"
+      },
+      {
+        "id": "interaction",
+        "from": "browser",
+        "to": "runtime",
+        "y": 580,
+        "label": "缩放、聚焦与路径查看",
+        "variant": "default"
+      },
+      {
+        "id": "update",
+        "from": "runtime",
+        "to": "browser",
+        "y": 625,
+        "label": "更新图表视图",
+        "variant": "return"
+      }
+    ],
+    "activations": [
+      {
+        "participant": "html",
+        "from": 200,
+        "to": 275,
+        "type": "frontend"
+      },
+      {
+        "participant": "assets",
+        "from": 330,
+        "to": 400,
+        "type": "cloud"
+      },
+      {
+        "participant": "runtime",
+        "from": 460,
+        "to": 635,
+        "type": "backend"
+      }
+    ],
+    "cards": [
+      {
+        "dot": "cyan",
+        "title": "无需单独获取 JSON",
+        "items": [
+          "图表数据已经内嵌到 HTML 的 archify-data 标签里。",
+          "本图只演示公共 JS/CSS 的资源加载，不需要请求独立 JSON 文件。"
+        ]
+      },
+      {
+        "dot": "emerald",
+        "title": "本地与线上",
+        "items": [
+          "这份示例引用同目录资源，可以本地直接打开。",
+          "改用完整 HTTPS 地址后，HTML 可以单独发送，浏览器自动加载公共资源。"
+        ]
+      },
+      {
+        "dot": "violet",
+        "title": "版本一致",
+        "items": [
+          "数据块 runtimeVersion、JS 和 CSS 必须使用同一查看器版本。",
+          "资源不可访问时，页面无法完成图表加载。"
+        ]
+      }
+    ]
+  },
+  "options": {},
+  "compileOptions": {}
+}
+</script>
+<script src="./archify.js" defer onerror="document.getElementById('archify-status').textContent='查看器资源加载失败 / Viewer failed to load'"></script>
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-unified="true" data-motion="still">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="generator" content="archify-general 0.1.0">
+<title>Archify 资源版本的生命周期</title>
+<link rel="stylesheet" href="./archify.css" onerror="document.getElementById('archify-status').textContent='样式资源加载失败 / Stylesheet failed to load'">
+</head>
+<body>
+<main id="archify-root" data-archify-root aria-busy="true"><p id="archify-status" role="status">正在加载图表 / Loading diagram…</p></main>
+<script id="archify-data" type="application/json">
+{
+  "runtimeVersion": "0.1.0",
+  "diagram": {
+    "schema_version": 1,
+    "diagram_type": "lifecycle",
+    "meta": {
+      "title": "Archify 资源版本的生命周期",
+      "subtitle": "Archify 演示 · 图表内容与公共资源分离",
+      "locale": "zh-CN",
+      "output": "archify-release.lifecycle.html",
+      "animation": "trace",
+      "viewBox": [
+        1120,
+        590
+      ]
+    },
+    "lanes": [
+      {
+        "id": "main",
+        "label": "当前版本"
+      },
+      {
+        "id": "next",
+        "label": "后续版本"
+      }
+    ],
+    "states": [
+      {
+        "id": "draft",
+        "type": "start",
+        "label": "准备版本",
+        "sublabel": "整理 JS / CSS",
+        "lane": "main",
+        "col": 0,
+        "step": "01",
+        "tag": "可修改"
+      },
+      {
+        "id": "check",
+        "type": "decision",
+        "label": "验证通过",
+        "sublabel": "图表、交互与资源",
+        "lane": "main",
+        "col": 1,
+        "step": "02",
+        "tag": "待发布"
+      },
+      {
+        "id": "published",
+        "type": "success",
+        "label": "正式发布",
+        "sublabel": "固定版本目录",
+        "lane": "main",
+        "col": 2,
+        "step": "03",
+        "tag": "内容冻结"
+      },
+      {
+        "id": "retained",
+        "type": "waiting",
+        "label": "保留旧版",
+        "sublabel": "已有 HTML 继续引用",
+        "lane": "main",
+        "col": 3,
+        "step": "04",
+        "tag": "兼容已有页面"
+      },
+      {
+        "id": "next",
+        "type": "active",
+        "label": "准备新版本",
+        "sublabel": "新增版本目录",
+        "lane": "next",
+        "col": 0,
+        "tag": "独立验证"
+      },
+      {
+        "id": "upgrade",
+        "type": "success",
+        "label": "新版页面",
+        "sublabel": "更新资源与版本声明",
+        "lane": "next",
+        "col": 2,
+        "tag": "选择升级"
+      }
+    ],
+    "transitions": [
+      {
+        "id": "iterate",
+        "from": "published",
+        "to": "next",
+        "label": "功能迭代",
+        "labelAt": [
+          402,
+          240
+        ],
+        "variant": "dashed",
+        "fromSide": "bottom",
+        "toSide": "top",
+        "route": "straight"
+      },
+      {
+        "id": "upgrade",
+        "from": "next",
+        "to": "upgrade",
+        "label": "发布后使用",
+        "labelAt": [
+          556,
+          295
+        ],
+        "variant": "emphasis"
+      }
+    ],
+    "cards": [
+      {
+        "dot": "cyan",
+        "title": "发布后保留旧资源",
+        "items": [
+          "已发布目录保持不变，已有 HTML 的资源地址继续有效。",
+          "新功能使用新的版本目录，不覆盖旧版 JS/CSS。"
+        ]
+      },
+      {
+        "dot": "emerald",
+        "title": "页面按需升级",
+        "items": [
+          "升级页面时同步修改 JS、CSS 地址与 runtimeVersion。",
+          "检查目标版本的数据格式，并重新验证图表。"
+        ]
+      },
+      {
+        "dot": "violet",
+        "title": "两种版本号",
+        "items": [
+          "查看器版本标识公共 JS/CSS 的版本。",
+          "schema_version 标识图表数据格式，二者分别管理。"
+        ]
+      }
+    ]
+  },
+  "options": {},
+  "compileOptions": {}
+}
+</script>
+<script src="./archify.js" defer onerror="document.getElementById('archify-status').textContent='查看器资源加载失败 / Viewer failed to load'"></script>
+</body>
+</html>

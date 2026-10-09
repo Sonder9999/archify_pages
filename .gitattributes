@@ -1,0 +1,8 @@
+* text=auto
+.gitattributes text eol=lf
+.gitignore text eol=lf
+*.md text eol=lf
+*.html text eol=lf
+*.json text eol=lf
+# Generated resources keep their exact bytes; source whitespace is not linted here.
+/runtime/** -text -whitespace

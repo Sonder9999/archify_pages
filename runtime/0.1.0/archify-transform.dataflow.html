@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-unified="true" data-motion="still">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="generator" content="archify-general 0.1.0">
+<title>Archify：从图表数据到可交互页面</title>
+<link rel="stylesheet" href="./archify.css" onerror="document.getElementById('archify-status').textContent='样式资源加载失败 / Stylesheet failed to load'">
+</head>
+<body>
+<main id="archify-root" data-archify-root aria-busy="true"><p id="archify-status" role="status">正在加载图表 / Loading diagram…</p></main>
+<script id="archify-data" type="application/json">
+{
+  "runtimeVersion": "0.1.0",
+  "diagram": {
+    "schema_version": 1,
+    "diagram_type": "dataflow",
+    "meta": {
+      "title": "Archify：从图表数据到可交互页面",
+      "subtitle": "Archify 演示 · 图表内容与公共资源分离",
+      "locale": "zh-CN",
+      "output": "archify-transform.dataflow.html",
+      "animation": "trace",
+      "viewBox": [
+        1140,
+        470
+      ]
+    },
+    "stages": [
+      {
+        "label": "输入数据"
+      },
+      {
+        "label": "解析校验"
+      },
+      {
+        "label": "布局编译"
+      },
+      {
+        "label": "图形输出"
+      },
+      {
+        "label": "交互展示"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "json",
+        "type": "database",
+        "label": "图表 JSON",
+        "sublabel": "内嵌于 HTML",
+        "stage": 0,
+        "row": 0,
+        "tag": "内容"
+      },
+      {
+        "id": "parse",
+        "type": "security",
+        "label": "类型与版本",
+        "sublabel": "结构、ID 与引用",
+        "stage": 1,
+        "row": 0,
+        "tag": "校验"
+      },
+      {
+        "id": "layout",
+        "type": "backend",
+        "label": "图表编译器",
+        "sublabel": "坐标、连线与标签",
+        "stage": 2,
+        "row": 0,
+        "tag": "五种类型"
+      },
+      {
+        "id": "svg",
+        "type": "frontend",
+        "label": "SVG 图形",
+        "sublabel": "节点与连接关系",
+        "stage": 3,
+        "row": 0,
+        "tag": "可缩放"
+      },
+      {
+        "id": "viewer",
+        "type": "frontend",
+        "label": "统一查看器",
+        "sublabel": "交互与页面导出",
+        "stage": 4,
+        "row": 0,
+        "tag": "JS + CSS"
+      }
+    ],
+    "flows": [
+      {
+        "id": "input",
+        "from": "json",
+        "to": "parse",
+        "label": "图表数据",
+        "classification": "结构化输入",
+        "variant": "emphasis"
+      },
+      {
+        "id": "valid",
+        "from": "parse",
+        "to": "layout",
+        "label": "有效数据",
+        "classification": "已校验",
+        "variant": "emphasis"
+      },
+      {
+        "id": "render",
+        "from": "layout",
+        "to": "svg",
+        "label": "图形标记",
+        "classification": "SVG",
+        "variant": "emphasis"
+      },
+      {
+        "id": "show",
+        "from": "svg",
+        "to": "viewer",
+        "label": "图形与元数据",
+        "classification": "渲染结果",
+        "variant": "emphasis"
+      }
+    ],
+    "cards": [
+      {
+        "dot": "cyan",
+        "title": "数据与样式分离",
+        "items": [
+          "修改 JSON 就能改变图表内容；无需为每张图复制查看器代码。",
+          "不同图表类型使用各自的数据结构，共用同一套资源地址。"
+        ]
+      },
+      {
+        "dot": "emerald",
+        "title": "编译过程",
+        "items": [
+          "数据校验检查结构、节点标识与连线引用。",
+          "对应类型的编译器计算布局并输出 SVG。"
+        ]
+      },
+      {
+        "dot": "violet",
+        "title": "查看器能力",
+        "items": [
+          "SVG 进入统一页面后，可缩放、聚焦、查看路径和导出。",
+          "CSS 为页面和图表提供一致的显示样式。"
+        ]
+      }
+    ]
+  },
+  "options": {},
+  "compileOptions": {}
+}
+</script>
+<script src="./archify.js" defer onerror="document.getElementById('archify-status').textContent='查看器资源加载失败 / Viewer failed to load'"></script>
+</body>
+</html>

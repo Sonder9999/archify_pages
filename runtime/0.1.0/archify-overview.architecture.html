@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark" data-unified="true" data-motion="still">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="generator" content="archify-general 0.1.0">
+<title>Archify 的组成：一份 HTML，共用 JS 与 CSS</title>
+<link rel="stylesheet" href="./archify.css" onerror="document.getElementById('archify-status').textContent='样式资源加载失败 / Stylesheet failed to load'">
+</head>
+<body>
+<main id="archify-root" data-archify-root aria-busy="true"><p id="archify-status" role="status">正在加载图表 / Loading diagram…</p></main>
+<script id="archify-data" type="application/json">
+{
+  "runtimeVersion": "0.1.0",
+  "diagram": {
+    "schema_version": 1,
+    "diagram_type": "architecture",
+    "meta": {
+      "title": "Archify 的组成：一份 HTML，共用 JS 与 CSS",
+      "subtitle": "Archify 演示 · 图表内容与公共资源分离",
+      "locale": "zh-CN",
+      "output": "archify-overview.architecture.html",
+      "animation": "trace"
+    },
+    "components": [
+      {
+        "id": "html",
+        "type": "frontend",
+        "label": "图表 HTML",
+        "sublabel": "标签 + 内嵌 JSON",
+        "pos": [
+          60,
+          130
+        ],
+        "size": [
+          180,
+          80
+        ]
+      },
+      {
+        "id": "js",
+        "type": "backend",
+        "label": "公共 JS",
+        "sublabel": "解析数据与图表布局",
+        "pos": [
+          340,
+          130
+        ],
+        "size": [
+          180,
+          80
+        ]
+      },
+      {
+        "id": "svg",
+        "type": "frontend",
+        "label": "SVG 图表",
+        "sublabel": "节点、连线与标签",
+        "pos": [
+          620,
+          130
+        ],
+        "size": [
+          180,
+          80
+        ]
+      },
+      {
+        "id": "viewer",
+        "type": "frontend",
+        "label": "交互查看器",
+        "sublabel": "缩放、路径与导出",
+        "pos": [
+          900,
+          130
+        ],
+        "size": [
+          180,
+          80
+        ]
+      },
+      {
+        "id": "css",
+        "type": "cloud",
+        "label": "公共 CSS",
+        "sublabel": "统一样式与主题",
+        "pos": [
+          340,
+          360
+        ],
+        "size": [
+          180,
+          80
+        ]
+      },
+      {
+        "id": "reader",
+        "type": "external",
+        "label": "读者",
+        "sublabel": "浏览器或 iframe",
+        "pos": [
+          900,
+          360
+        ],
+        "size": [
+          180,
+          80
+        ]
+      }
+    ],
+    "connections": [
+      {
+        "id": "parse",
+        "from": "html",
+        "to": "js",
+        "label": "图表数据",
+        "variant": "emphasis"
+      },
+      {
+        "id": "compile",
+        "from": "js",
+        "to": "svg",
+        "label": "编译图形",
+        "variant": "emphasis"
+      },
+      {
+        "id": "mount",
+        "from": "svg",
+        "to": "viewer",
+        "label": "挂载界面",
+        "variant": "emphasis"
+      },
+      {
+        "id": "style",
+        "from": "css",
+        "to": "viewer",
+        "label": "样式与主题",
+        "variant": "dashed",
+        "fromSide": "top",
+        "toSide": "bottom",
+        "via": [
+          [
+            430,
+            280
+          ],
+          [
+            990,
+            280
+          ]
+        ],
+        "labelAt": [
+          710,
+          267
+        ]
+      },
+      {
+        "id": "open",
+        "from": "viewer",
+        "to": "reader",
+        "label": "阅读与交互",
+        "fromSide": "right",
+        "toSide": "right",
+        "via": [
+          [
+            1160,
+            170
+          ],
+          [
+            1160,
+            400
+          ]
+        ],
+        "labelAt": [
+          1160,
+          282
+        ]
+      }
+    ],
+    "cards": [
+      {
+        "dot": "cyan",
+        "title": "HTML 放什么",
+        "items": [
+          "HTML 只保留基础标签和内嵌 JSON；图表内容跟随文件一起分发。",
+          "这份演示使用同目录的 archify.js 与 archify.css。"
+        ]
+      },
+      {
+        "dot": "emerald",
+        "title": "公共资源做什么",
+        "items": [
+          "JS 解析图表数据、生成 SVG，并提供统一交互。",
+          "CSS 控制主题、节点样式与页面布局，所有同版本图表共用。"
+        ]
+      },
+      {
+        "dot": "violet",
+        "title": "分享与嵌入",
+        "items": [
+          "实际分享时将相对资源路径换成完整 HTTPS 地址。",
+          "网页或博客通过 iframe 承载图表页面；版本号和资源地址需要一致。"
+        ]
+      }
+    ]
+  },
+  "options": {},
+  "compileOptions": {}
+}
+</script>
+<script src="./archify.js" defer onerror="document.getElementById('archify-status').textContent='查看器资源加载失败 / Viewer failed to load'"></script>
+</body>
+</html>
