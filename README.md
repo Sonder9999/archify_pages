@@ -1,8 +1,33 @@
-# Archify Runtime
+# Archify · Runtime 与 Embed
 
-Archify 图表查看器的静态资源包。HTML 保存图表 JSON，公共 JS 负责解析与交互，公共 CSS 提供统一样式。支持架构图、流程图、时序图、数据流图和生命周期图。
+Archify 图表查看器的静态资源包，支持架构图、流程图、时序图、数据流图和生命周期图。Runtime 用于独立 HTML 分享和 iframe；Embed 用于在文章正文内直接展示原始 JSON。
 
 [演示与使用](https://sonder9999.github.io/archify_pages/) · [GitHub 仓库](https://github.com/Sonder9999/archify_pages)
+
+## 文章内嵌：Embed 0.1.0
+
+[参数预览与正文复制](embed/0.1.0/index.html) · [完整参数说明](embed/0.1.0/README.md)
+
+正文只需要一次资源引入和一个 JSON 数据块，不需要修改博客模板或安装插件：
+
+```html
+<script src="https://sonder9999.github.io/archify_pages/embed/0.1.0/archify-embed.js" defer></script>
+<script type="application/json" data-archify data-options='{"colorTheme":"hotaru","height":560,"showExport":true}'>
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": { "title": "Service", "locale": "zh-CN", "output": "service.html" },
+  "components": [
+    { "id": "service", "type": "backend", "label": "Service", "pos": [40, 40], "size": [160, 80] }
+  ],
+  "connections": []
+}
+</script>
+```
+
+将代码粘贴为原始 HTML，替换完整图表 JSON。库自动加载同目录样式和字体、创建图表；同篇后续图表只需再写 JSON 块。默认开启动画，动态 / 导出 / 搜索入口默认隐藏，地图不可用；通过 `data-options` 指定入口与颜色。删除示例中的 `showExport` 后，导出入口也会隐藏。Hotaru 主题读取博客已有颜色变量，其他博客可使用通用文章配色或传入 `colors`。
+
+文章平台需要保留 HTML 标签并允许外部脚本，过滤脚本的平台无法仅靠正文接入。上述远端地址需要本目录成功部署到 Pages 后才能使用；本地准备与远端部署是分别进行的步骤。
 
 ## 目录
 
@@ -10,18 +35,23 @@ Archify 图表查看器的静态资源包。HTML 保存图表 JSON，公共 JS �
 ├── index.html                 # 演示与使用入口
 ├── README.md
 ├── LICENSE                    # 代码、字体许可与第三方说明
-└── runtime/
-    └── 0.1.0/
-        ├── archify.js          # 图表解析与查看器
-        ├── archify.css         # 查看器样式
-        ├── archify-overview.architecture.html
-        ├── archify-authoring.workflow.html
-        ├── archify-loading.sequence.html
-        ├── archify-transform.dataflow.html
-        └── archify-release.lifecycle.html
+├── runtime/0.1.0/             # 已有独立页面资源，保持原样
+│   ├── archify.js
+│   ├── archify.css
+│   └── 五个公开示例 HTML
+└── embed/0.1.0/               # 文章内嵌资源，独立版本
+    ├── archify-embed.js
+    ├── archify-embed.css
+    ├── archify-embed-fonts.css
+    ├── archify-embed.mjs
+    ├── manifest.json
+    ├── LICENSE
+    ├── JetBrainsMono-OFL.txt
+    ├── index.html             # 图表 / 参数 / JSON / 正文代码预览
+    └── README.md
 ```
 
-每个版本使用独立目录。页面只需引用同一版本的 `archify.js` 和 `archify.css`。字体与内置图标已包含在资源包中。
+Runtime 与 Embed 分别管理版本。独立页面引用同一 Runtime 版本的 `archify.js` 和 `archify.css`；文章内嵌引用同一 Embed 版本的 `archify-embed.js`，由它加载 CSS 和字体。两种资源不能混用。
 
 打开 [首页](index.html) 浏览五种演示，并复制资源地址、完整 HTML 页面或 iframe 嵌入代码。线上首页自动使用当前站点的根地址；本地打开时，填写实际资源地址后再复制用于分享的代码。
 
@@ -87,7 +117,7 @@ JSON 外层的 `runtimeVersion` 声明查看器版本，`diagram` 保存图表�
 
 使用完整 HTTPS 资源地址的 HTML 可以移动或单独分发，接收者用浏览器打开后会自动加载 JS 和 CSS。加载需要网络可访问资源地址；离线使用需另行生成包含资源的单文件 HTML。邮件、聊天工具或博客的预览界面可能不执行脚本，应在浏览器中打开文件。
 
-## 网页与博客嵌入
+## Runtime · iframe 嵌入
 
 将图表 HTML 托管为独立页面，然后通过 iframe 嵌入：
 
@@ -102,9 +132,13 @@ JSON 外层的 `runtimeVersion` 声明查看器版本，`diagram` 保存图表�
 </iframe>
 ```
 
-替换 `src` 为实际图表页面地址，并按版面调整高度。每个 iframe 承载一张图，页面样式与博客样式隔离。当前资源按独立页面设计，在同一网页展示多张图时使用多个 iframe。
+替换 `src` 为实际图表页面地址，并按版面调整高度。每个 iframe 承载一张图，页面样式与博客样式隔离。Runtime 按独立页面设计，多图可以使用多个 iframe；若要在正文写 JSON 并使用主题 / 按钮参数，请使用 Embed。
 
 ## 静态托管
+
+GitHub Pages 配置为 `main` 分支的根目录 `/`，站点地址为 `https://sonder9999.github.io/archify_pages/`。首次发布 Embed 0.1.0 需要提交完整 `embed/0.1.0/`（九个文件），以及根目录的 `index.html`、`README.md`、`.gitattributes`。已有 `runtime/0.1.0/` 保持不变。无需上传开发源码、`node_modules`、整个 `dist`、博客文件或用户业务 JSON。
+
+推送后等待 Pages 构建完成，确认 JS / CSS / 字体 / 展示页均能访问，再将文章切换为远端地址。GitHub Release 不是 Pages 静态托管的前提；可选标签或 Release 名称为 `embed-v0.1.0`。准备本地目录不等于已经提交、推送或发布。
 
 保留目录结构上传 `runtime/`，并随资源分发根目录的 `LICENSE`。资源服务应返回正确的文件内容与响应类型：JS 为 `text/javascript`，CSS 为 `text/css`。引用地址应指向实际静态文件，不能使用仓库的文件预览页地址。
 
@@ -117,6 +151,7 @@ HTML 中使用绝对资源地址，文件位置就不会影响 JS/CSS 的加载�
 - 升级图表页面时同时更新 JS/CSS 地址和 `runtimeVersion`，并按目标版本的数据格式检查图表内容。
 - `diagram.schema_version` 表示图表数据格式版本，与查看器版本分别管理。
 - 使用明确版本地址，避免自动指向最新版本的地址使已有图表行为发生变化。
+- `embed/0.1.0/` 是独立的文章内嵌版本，支持的类型与 schema 见其 `manifest.json`；发布后冻结资源，更新时增加新的 Embed 版本目录。
 
 ## 许可证
 

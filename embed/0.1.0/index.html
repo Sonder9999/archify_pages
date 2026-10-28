@@ -1,0 +1,1181 @@
+<!doctype html>
+<html lang="zh-CN" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Archify Embed 0.1.0：一次资源引入、一块原始 JSON，在文章内部展示交互图表。预览五种图表，调整主题与按钮，复制 Markdown 正文。">
+  <title>Archify Embed 0.1.0 · 文章内嵌</title>
+  <style>
+    :root{color-scheme:dark;--bg:#0b1018;--panel:#121925;--line:#283243;--text:#edf2f8;--muted:#a3afc1;--accent:#54d4cf}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.7 system-ui,-apple-system,"Segoe UI",sans-serif}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}
+    button,input,select,textarea{font:inherit}button{cursor:pointer}button:disabled{opacity:.5;cursor:wait}a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+    .wrap{width:min(1240px,calc(100% - 64px));margin:auto}header{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:25px 0;border-bottom:1px solid var(--line)}.brand{font-size:21px;font-weight:750;letter-spacing:-.6px;color:var(--text)}.brand span{color:var(--accent);margin-left:8px;font-size:12px;font-weight:500;letter-spacing:0}nav{display:flex;gap:22px;font-size:13px}nav a{color:var(--muted)}
+    .hero{padding:42px 0 30px}.eyebrow{margin:0 0 12px;color:var(--accent);letter-spacing:2px;font:12px/1.5 ui-monospace,Consolas,monospace}h1{margin:0 0 14px;font-size:clamp(30px,4vw,44px);line-height:1.3;letter-spacing:-1.2px}.intro{max-width:800px;margin:0;color:var(--muted)}.facts{display:flex;gap:10px;flex-wrap:wrap;margin-top:19px}.facts span{border:1px solid var(--line);border-radius:6px;padding:3px 10px;font-size:12px;color:var(--muted)}
+    .layout{display:grid;grid-template-columns:300px minmax(0,1fr);gap:20px;align-items:start}.panel{border:1px solid var(--line);border-radius:13px;background:var(--panel);min-width:0;overflow:hidden}.settings{padding:20px}h2{font-size:18px;line-height:1.5;margin:0 0 16px}h3{font-size:14px;margin:16px 0 10px}.field{display:block;margin-bottom:14px}.field>span{display:block;font-size:12px;color:var(--muted);margin-bottom:6px}
+    input[type=url],input[type=number],select,textarea{width:100%;min-width:0;border:1px solid #354257;background:var(--bg);color:var(--text);border-radius:7px;padding:8px 10px;font-size:13px}input[type=checkbox]{accent-color:var(--accent);width:16px;height:16px;margin:0}.checks{display:grid;grid-template-columns:1fr 1fr;gap:10px}.check{display:flex;align-items:center;gap:8px;font-size:12px}.motion{margin-bottom:14px}.hint{font-size:12px;color:var(--muted);margin:10px 0 0}.settings details{margin-top:18px}.settings summary{font-size:13px;color:var(--muted);cursor:pointer}.settings details .checks{margin-top:12px}.colors{margin-bottom:16px}.colors label{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;margin-bottom:8px}.colors input{width:48px;height:28px;padding:2px;border:1px solid var(--line);border-radius:5px;background:var(--bg)}[hidden]{display:none!important}
+    .primary,.secondary{border:1px solid var(--line);border-radius:7px;font-size:12px;padding:7px 12px}.primary{background:var(--accent);border-color:var(--accent);color:#07201f;font-weight:650}.secondary{background:transparent;color:var(--text)}.secondary:hover{border-color:var(--accent)}.settings .primary{width:100%;margin-top:20px}.preview-head,.section-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:17px 20px;border-bottom:1px solid var(--line)}.preview-head h2,.section-head h2{margin:0}.badge{font:12px/1.5 ui-monospace,Consolas,monospace;color:var(--accent)}
+    .stage{padding:18px;--card-bg:#121925;--primary:#54d4cf;--tw-prose-body:#edf2f8;--tw-prose-captions:#a3afc1;--line-divider:#283243}.stage[data-host-theme=light]{--card-bg:#fff;--primary:#167e79;--tw-prose-body:#273442;--tw-prose-captions:#607183;--line-divider:#dce3e9}.preview-note{padding:0 20px 15px;margin:0;color:var(--muted);font-size:12px}.status{min-height:23px;margin:14px 0 0;color:var(--accent);font-size:12px;overflow-wrap:anywhere}.status[data-error=true]{color:#ffabab}
+    .editor{margin-top:20px}.editor-body{padding:18px 20px}.editor textarea{display:block;height:280px;resize:vertical;font:12px/1.7 ui-monospace,Consolas,monospace;tab-size:2}.editor-actions{display:flex;gap:12px;align-items:center;margin-top:12px}.editor-actions .hint{margin:0}.copy-section{margin:26px 0}.copy-body{padding:20px}.address{display:flex;align-items:end;gap:12px}.address .field{flex:1;min-width:0;margin:0}.address button{flex-shrink:0}.snippet{max-height:340px;overflow:auto;white-space:pre;margin:18px 0 0;padding:17px;border:1px solid var(--line);border-radius:7px;background:var(--bg);font:12px/1.8 ui-monospace,Consolas,monospace}.resource-links{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:16px;font:12px/1.7 ui-monospace,Consolas,monospace}.explain{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin:28px 0 38px}.explain h2{margin-bottom:10px}.explain p{margin:0;color:var(--muted);font-size:13px}.explain code{color:var(--text);font-size:12px}footer{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:20px 0 28px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
+    @media(max-width:850px){.layout{grid-template-columns:245px minmax(0,1fr)}.wrap{width:calc(100% - 32px)}.settings{padding:16px}.stage{padding:12px}.checks{gap:10px 6px}}
+    @media(max-width:650px){header{flex-wrap:wrap;padding:18px 0;gap:12px}nav{gap:16px}.hero{padding:30px 0 24px}.layout{grid-template-columns:1fr}.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}.settings-grid .colors{grid-column:1/-1}.preview-head,.section-head{padding:14px 16px}.copy-body,.editor-body{padding:16px}.address{flex-wrap:wrap}.address .field{flex-basis:100%}.explain{grid-template-columns:1fr;gap:22px}.editor-actions{flex-wrap:wrap}.preview-head{align-items:start}.badge{font-size:11px}.hero h1{font-size:30px}}
+  </style>
+  <script src="./archify-embed.js" defer></script>
+</head>
+<body>
+  <div class="wrap">
+    <header><a class="brand" href="../../index.html">Archify <span>EMBED 0.1.0</span></a><nav aria-label="导航"><a href="#playground">参数预览</a><a href="#copy">正文代码</a><a href="./README.md">使用说明 ↗</a></nav></header>
+    <main>
+      <div class="hero"><p class="eyebrow">JSON → ARTICLE</p><h1>把图表，直接写进文章。</h1><p class="intro">正文引入一次公共脚本，放入完整 Archify JSON。库自动加载样式与字体、创建交互图表；主题、颜色和按钮通过参数配置。</p><div class="facts"><span>5 种图表</span><span>文章内显示 · 同页多图</span><span>独立版本目录</span><span>无需博客插件</span></div></div>
+      <div class="layout" id="playground">
+        <form class="panel settings" id="settings">
+          <h2>配置图表</h2>
+          <div class="settings-grid">
+            <label class="field"><span>图表示例</span><select id="sample"><option value="architecture">架构图 · Archify 的组成</option><option value="workflow">流程图 · 制作与分享</option><option value="sequence">时序图 · 浏览器加载</option><option value="dataflow">数据流图 · 数据到页面</option><option value="lifecycle">生命周期 · 版本维护</option></select></label>
+            <label class="field"><span>明暗主题</span><select id="theme"><option value="auto">Auto · 跟随宿主</option><option value="light">Light · 浅色</option><option value="dark">Dark · 深色</option></select></label>
+            <label class="field"><span>文章配色</span><select id="palette"><option value="blog">Blog · 通用文章</option><option value="hotaru">Hotaru · 读取博客颜色</option><option value="custom">Custom · 自定义颜色</option></select></label>
+            <label class="field"><span>画布高度 / px</span><input id="height" type="number" min="120" max="10000" step="1" value="560" required></label>
+            <div class="colors" id="colors" hidden><label>背景 / surface<input type="color" id="surface" value="#142329"></label><label>正文 / text<input type="color" id="text" value="#e9f0f1"></label><label>主色 / accent<input type="color" id="accent" value="#7ac7bf"></label><label>次要文字 / muted<input type="color" id="muted" value="#9badb2"></label><label>边框 / border<input type="color" id="border" value="#354950"></label></div>
+          </div>
+          <label class="check motion"><input id="motion" type="checkbox" checked>启用图表动态</label>
+          <h3>显示入口</h3><div class="checks"><label class="check"><input id="showMotion" type="checkbox">动态按钮</label><label class="check"><input id="showExport" type="checkbox">导出按钮</label><label class="check"><input id="showSearch" type="checkbox">搜索按钮</label><label class="check"><input id="showFullscreen" type="checkbox" checked>全屏按钮</label></div>
+          <p class="hint">动态默认开启；动态、导出、搜索默认隐藏。地图入口不提供。</p>
+          <details><summary>标题、主题与附加内容</summary><div class="checks"><label class="check"><input id="showTitle" type="checkbox">大标题</label><label class="check"><input id="showTheme" type="checkbox">主题按钮</label><label class="check"><input id="showPreset" type="checkbox">皮肤按钮</label><label class="check"><input id="showNotes" type="checkbox">说明卡片</label><label class="check"><input id="showIndex" type="checkbox">节点索引</label></div></details>
+          <button class="primary" id="apply-options" type="submit">应用参数</button><p class="status" id="preview-status" role="status" aria-live="polite">正在加载预览…</p>
+        </form>
+        <div>
+          <section class="panel" aria-labelledby="preview-heading"><div class="preview-head"><h2 id="preview-heading">文章内预览</h2><span class="badge" id="diagram-info">Embed 0.1.0</span></div><div class="stage" id="stage"><script type="application/json" data-archify data-options='{"height":560}' id="preview-data">{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "Archify 的组成：一份 HTML，共用 JS 与 CSS",
+    "subtitle": "Archify 演示 · 图表内容与公共资源分离",
+    "locale": "zh-CN",
+    "output": "archify-overview.architecture.html",
+    "animation": "trace"
+  },
+  "components": [
+    {
+      "id": "html",
+      "type": "frontend",
+      "label": "图表 HTML",
+      "sublabel": "标签 + 内嵌 JSON",
+      "pos": [
+        60,
+        130
+      ],
+      "size": [
+        180,
+        80
+      ]
+    },
+    {
+      "id": "js",
+      "type": "backend",
+      "label": "公共 JS",
+      "sublabel": "解析数据与图表布局",
+      "pos": [
+        340,
+        130
+      ],
+      "size": [
+        180,
+        80
+      ]
+    },
+    {
+      "id": "svg",
+      "type": "frontend",
+      "label": "SVG 图表",
+      "sublabel": "节点、连线与标签",
+      "pos": [
+        620,
+        130
+      ],
+      "size": [
+        180,
+        80
+      ]
+    },
+    {
+      "id": "viewer",
+      "type": "frontend",
+      "label": "交互查看器",
+      "sublabel": "缩放、路径与导出",
+      "pos": [
+        900,
+        130
+      ],
+      "size": [
+        180,
+        80
+      ]
+    },
+    {
+      "id": "css",
+      "type": "cloud",
+      "label": "公共 CSS",
+      "sublabel": "统一样式与主题",
+      "pos": [
+        340,
+        360
+      ],
+      "size": [
+        180,
+        80
+      ]
+    },
+    {
+      "id": "reader",
+      "type": "external",
+      "label": "读者",
+      "sublabel": "浏览器或 iframe",
+      "pos": [
+        900,
+        360
+      ],
+      "size": [
+        180,
+        80
+      ]
+    }
+  ],
+  "connections": [
+    {
+      "id": "parse",
+      "from": "html",
+      "to": "js",
+      "label": "图表数据",
+      "variant": "emphasis"
+    },
+    {
+      "id": "compile",
+      "from": "js",
+      "to": "svg",
+      "label": "编译图形",
+      "variant": "emphasis"
+    },
+    {
+      "id": "mount",
+      "from": "svg",
+      "to": "viewer",
+      "label": "挂载界面",
+      "variant": "emphasis"
+    },
+    {
+      "id": "style",
+      "from": "css",
+      "to": "viewer",
+      "label": "样式与主题",
+      "variant": "dashed",
+      "fromSide": "top",
+      "toSide": "bottom",
+      "via": [
+        [
+          430,
+          280
+        ],
+        [
+          990,
+          280
+        ]
+      ],
+      "labelAt": [
+        710,
+        267
+      ]
+    },
+    {
+      "id": "open",
+      "from": "viewer",
+      "to": "reader",
+      "label": "阅读与交互",
+      "fromSide": "right",
+      "toSide": "right",
+      "via": [
+        [
+          1160,
+          170
+        ],
+        [
+          1160,
+          400
+        ]
+      ],
+      "labelAt": [
+        1160,
+        282
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "HTML 放什么",
+      "items": [
+        "HTML 只保留基础标签和内嵌 JSON；图表内容跟随文件一起分发。",
+        "这份演示使用同目录的 archify.js 与 archify.css。"
+      ]
+    },
+    {
+      "dot": "emerald",
+      "title": "公共资源做什么",
+      "items": [
+        "JS 解析图表数据、生成 SVG，并提供统一交互。",
+        "CSS 控制主题、节点样式与页面布局，所有同版本图表共用。"
+      ]
+    },
+    {
+      "dot": "violet",
+      "title": "分享与嵌入",
+      "items": [
+        "实际分享时将相对资源路径换成完整 HTTPS 地址。",
+        "网页或博客通过 iframe 承载图表页面；版本号和资源地址需要一致。"
+      ]
+    }
+  ]
+}</script></div><p class="preview-note">拖动平移；Ctrl / ⌘ + 滚轮缩放。全屏按钮位于图表左下角。</p><noscript><p>请启用 JavaScript 查看交互图表。正文用法也可在 README 中阅读。</p></noscript></section>
+          <section class="panel editor" aria-labelledby="editor-heading"><div class="section-head"><h2 id="editor-heading">原始 Archify JSON</h2><button class="secondary" id="reset-json" type="button">恢复当前示例</button></div><div class="editor-body"><label class="field" for="json"><span>粘贴完整 JSON，然后应用；解析或校验失败时保留上一张图。</span></label><textarea id="json" spellcheck="false" aria-describedby="json-help"></textarea><div class="editor-actions"><button class="primary" id="apply-json" type="button">应用 JSON</button><p class="hint" id="json-help">只写图表原始数据，不需要 runtimeVersion / diagram 外壳。</p></div></div></section>
+        </div>
+      </div>
+      <section class="panel copy-section" id="copy" aria-labelledby="copy-heading"><div class="section-head"><h2 id="copy-heading">复制到 Markdown 正文</h2><button class="primary" id="copy-snippet" type="button" disabled>复制正文代码</button></div><div class="copy-body"><div class="address"><label class="field"><span>用于复制的 Embed 版本目录地址</span><input id="resource-base" type="url" spellcheck="false" autocomplete="off" required aria-describedby="resource-help"></label><button class="secondary" id="pages-base" type="button">填入 GitHub Pages 地址</button></div><p class="hint" id="resource-help">预览始终使用同目录资源；复制代码使用此处的完整地址。请确保目标目录已部署。</p><p class="status" id="copy-status" role="status" aria-live="polite"></p><pre class="snippet" tabindex="0" aria-label="可复制的正文代码"><code id="snippet">加载预览后生成正文代码。</code></pre><div class="resource-links"><a href="./archify-embed.js">JS ↗</a><a href="./archify-embed.css">CSS ↗</a><a href="./archify-embed-fonts.css">字体 CSS ↗</a><a href="./archify-embed.mjs">ES Module ↗</a><a href="./manifest.json">Manifest ↗</a><a href="./README.md">参数与说明 ↗</a></div></div></section>
+      <div class="explain"><section><h2>两块正文，完成接入</h2><p>第一块 <code>script src</code> 引入库，库自动加载 CSS 和字体。第二块 <code>script type="application/json" data-archify</code> 保存原始图表，<code>data-options</code> 就是参数对象。同篇文章的后续图表只需再放 JSON 块；粘贴时保留 HTML 标签，去掉展示代码用的反引号围栏。</p></section><section><h2>跟随博客主题</h2><p><code>theme: "auto"</code> 跟随宿主明暗；<code>colorTheme: "hotaru"</code> 读取 Hotaru 现有变量。其他博客可以传 <code>colors</code>，值支持 CSS 颜色和 <code>var(--你的变量)</code>。正文平台需要允许原始 HTML 与脚本；过滤脚本的平台无法仅靠正文接入。</p></section></div>
+    </main>
+    <footer><span>Embed 0.1.0 · architecture / workflow / sequence / dataflow / lifecycle</span><div><a href="../../index.html">Runtime 演示</a> · <a href="./LICENSE">MIT</a> · <a href="./JetBrainsMono-OFL.txt">字体许可</a> · <a href="https://github.com/Sonder9999/archify_pages">GitHub</a></div></footer>
+  </div>
+  <script type="application/json" id="samples">{
+  "architecture": {
+    "schema_version": 1,
+    "diagram_type": "architecture",
+    "meta": {
+      "title": "Archify 的组成：一份 HTML，共用 JS 与 CSS",
+      "subtitle": "Archify 演示 · 图表内容与公共资源分离",
+      "locale": "zh-CN",
+      "output": "archify-overview.architecture.html",
+      "animation": "trace"
+    },
+    "components": [
+      {
+        "id": "html",
+        "type": "frontend",
+        "label": "图表 HTML",
+        "sublabel": "标签 + 内嵌 JSON",
+        "pos": [
+          60,
+          130
+        ],
+        "size": [
+          180,
+          80
+        ]
+      },
+      {
+        "id": "js",
+        "type": "backend",
+        "label": "公共 JS",
+        "sublabel": "解析数据与图表布局",
+        "pos": [
+          340,
+          130
+        ],
+        "size": [
+          180,
+          80
+        ]
+      },
+      {
+        "id": "svg",
+        "type": "frontend",
+        "label": "SVG 图表",
+        "sublabel": "节点、连线与标签",
+        "pos": [
+          620,
+          130
+        ],
+        "size": [
+          180,
+          80
+        ]
+      },
+      {
+        "id": "viewer",
+        "type": "frontend",
+        "label": "交互查看器",
+        "sublabel": "缩放、路径与导出",
+        "pos": [
+          900,
+          130
+        ],
+        "size": [
+          180,
+          80
+        ]
+      },
+      {
+        "id": "css",
+        "type": "cloud",
+        "label": "公共 CSS",
+        "sublabel": "统一样式与主题",
+        "pos": [
+          340,
+          360
+        ],
+        "size": [
+          180,
+          80
+        ]
+      },
+      {
+        "id": "reader",
+        "type": "external",
+        "label": "读者",
+        "sublabel": "浏览器或 iframe",
+        "pos": [
+          900,
+          360
+        ],
+        "size": [
+          180,
+          80
+        ]
+      }
+    ],
+    "connections": [
+      {
+        "id": "parse",
+        "from": "html",
+        "to": "js",
+        "label": "图表数据",
+        "variant": "emphasis"
+      },
+      {
+        "id": "compile",
+        "from": "js",
+        "to": "svg",
+        "label": "编译图形",
+        "variant": "emphasis"
+      },
+      {
+        "id": "mount",
+        "from": "svg",
+        "to": "viewer",
+        "label": "挂载界面",
+        "variant": "emphasis"
+      },
+      {
+        "id": "style",
+        "from": "css",
+        "to": "viewer",
+        "label": "样式与主题",
+        "variant": "dashed",
+        "fromSide": "top",
+        "toSide": "bottom",
+        "via": [
+          [
+            430,
+            280
+          ],
+          [
+            990,
+            280
+          ]
+        ],
+        "labelAt": [
+          710,
+          267
+        ]
+      },
+      {
+        "id": "open",
+        "from": "viewer",
+        "to": "reader",
+        "label": "阅读与交互",
+        "fromSide": "right",
+        "toSide": "right",
+        "via": [
+          [
+            1160,
+            170
+          ],
+          [
+            1160,
+            400
+          ]
+        ],
+        "labelAt": [
+          1160,
+          282
+        ]
+      }
+    ],
+    "cards": [
+      {
+        "dot": "cyan",
+        "title": "HTML 放什么",
+        "items": [
+          "HTML 只保留基础标签和内嵌 JSON；图表内容跟随文件一起分发。",
+          "这份演示使用同目录的 archify.js 与 archify.css。"
+        ]
+      },
+      {
+        "dot": "emerald",
+        "title": "公共资源做什么",
+        "items": [
+          "JS 解析图表数据、生成 SVG，并提供统一交互。",
+          "CSS 控制主题、节点样式与页面布局，所有同版本图表共用。"
+        ]
+      },
+      {
+        "dot": "violet",
+        "title": "分享与嵌入",
+        "items": [
+          "实际分享时将相对资源路径换成完整 HTTPS 地址。",
+          "网页或博客通过 iframe 承载图表页面；版本号和资源地址需要一致。"
+        ]
+      }
+    ]
+  },
+  "workflow": {
+    "schema_version": 2,
+    "diagram_type": "workflow",
+    "meta": {
+      "title": "用 Archify 制作并分享一张图",
+      "subtitle": "Archify 演示 · 图表内容与公共资源分离",
+      "locale": "zh-CN",
+      "output": "archify-authoring.workflow.html",
+      "animation": "trace"
+    },
+    "lanes": [
+      {
+        "id": "content",
+        "label": "定义内容"
+      },
+      {
+        "id": "build",
+        "label": "生成与检查"
+      },
+      {
+        "id": "delivery",
+        "label": "分享与嵌入"
+      }
+    ],
+    "phases": [
+      {
+        "id": "define",
+        "label": "明确内容",
+        "fromCol": 0,
+        "toCol": 1
+      },
+      {
+        "id": "prepare",
+        "label": "生成页面",
+        "fromCol": 2,
+        "toCol": 3,
+        "variant": "emphasis"
+      },
+      {
+        "id": "deliver",
+        "label": "分发",
+        "fromCol": 4,
+        "toCol": 4
+      }
+    ],
+    "nodes": [
+      {
+        "id": "goal",
+        "lane": "content",
+        "col": 0,
+        "type": "external",
+        "label": "说明目标",
+        "sublabel": "图要回答什么问题",
+        "width": 174
+      },
+      {
+        "id": "type",
+        "lane": "content",
+        "col": 1,
+        "type": "frontend",
+        "label": "选择图表类型",
+        "sublabel": "结构、步骤或时间顺序",
+        "width": 174
+      },
+      {
+        "id": "json",
+        "lane": "build",
+        "col": 1,
+        "type": "database",
+        "label": "编写 JSON",
+        "sublabel": "节点、连线与说明",
+        "width": 174
+      },
+      {
+        "id": "html",
+        "lane": "build",
+        "col": 2,
+        "type": "backend",
+        "label": "生成 HTML",
+        "sublabel": "内嵌数据并引用资源",
+        "width": 174
+      },
+      {
+        "id": "check",
+        "lane": "build",
+        "col": 3,
+        "type": "security",
+        "label": "浏览器检查",
+        "sublabel": "文字、连线与交互",
+        "width": 174
+      },
+      {
+        "id": "share",
+        "lane": "delivery",
+        "col": 3,
+        "type": "cloud",
+        "label": "分享 HTML",
+        "sublabel": "使用完整资源地址",
+        "width": 174
+      },
+      {
+        "id": "embed",
+        "lane": "delivery",
+        "col": 4,
+        "type": "frontend",
+        "label": "网页内嵌",
+        "sublabel": "iframe 独立展示",
+        "width": 174
+      }
+    ],
+    "mainPath": [
+      "goal",
+      "type",
+      "json",
+      "html",
+      "check",
+      "share",
+      "embed"
+    ],
+    "edges": [
+      {
+        "id": "choose",
+        "from": "goal",
+        "to": "type",
+        "variant": "emphasis"
+      },
+      {
+        "id": "author",
+        "from": "type",
+        "to": "json",
+        "label": "整理内容",
+        "variant": "emphasis"
+      },
+      {
+        "id": "generate",
+        "from": "json",
+        "to": "html",
+        "variant": "emphasis"
+      },
+      {
+        "id": "inspect",
+        "from": "html",
+        "to": "check",
+        "variant": "emphasis"
+      },
+      {
+        "id": "accept",
+        "from": "check",
+        "to": "share",
+        "label": "检查通过",
+        "variant": "emphasis"
+      },
+      {
+        "id": "publish",
+        "from": "share",
+        "to": "embed",
+        "label": "托管页面",
+        "variant": "default"
+      }
+    ],
+    "cards": [
+      {
+        "dot": "cyan",
+        "title": "选择合适的图",
+        "items": [
+          "架构图展示组成；流程图展示步骤；时序图展示调用先后。",
+          "数据流图展示转换；生命周期图展示状态和版本演进。"
+        ]
+      },
+      {
+        "dot": "emerald",
+        "title": "先检查再分享",
+        "items": [
+          "浏览器检查图表加载、标签遮挡、连线和导出。",
+          "单独发送 HTML 时，JS/CSS 必须使用接收者可访问的完整 HTTPS 地址。"
+        ]
+      },
+      {
+        "dot": "violet",
+        "title": "嵌入博客",
+        "items": [
+          "将 HTML 托管成图表页面，再用 iframe 引用。",
+          "多张图使用多个 iframe，各自加载自己的数据。"
+        ]
+      }
+    ]
+  },
+  "sequence": {
+    "schema_version": 1,
+    "diagram_type": "sequence",
+    "meta": {
+      "title": "浏览器如何加载一张 Archify 图",
+      "subtitle": "Archify 演示 · 图表内容与公共资源分离",
+      "locale": "zh-CN",
+      "output": "archify-loading.sequence.html",
+      "animation": "trace",
+      "viewBox": [
+        1080,
+        760
+      ],
+      "column_fit": "spread"
+    },
+    "participants": [
+      {
+        "id": "browser",
+        "type": "external",
+        "label": "浏览器",
+        "sublabel": "打开图表文件"
+      },
+      {
+        "id": "html",
+        "type": "frontend",
+        "label": "图表 HTML",
+        "sublabel": "标签与内嵌 JSON"
+      },
+      {
+        "id": "assets",
+        "type": "cloud",
+        "label": "资源服务",
+        "sublabel": "同版本 JS + CSS"
+      },
+      {
+        "id": "runtime",
+        "type": "backend",
+        "label": "Archify JS",
+        "sublabel": "解析、编译与交互"
+      }
+    ],
+    "segments": [
+      {
+        "from": 174,
+        "to": 285,
+        "label": "01 / 读取页面"
+      },
+      {
+        "from": 305,
+        "to": 410,
+        "label": "02 / 加载公共资源"
+      },
+      {
+        "from": 430,
+        "to": 640,
+        "label": "03 / 构建图表"
+      }
+    ],
+    "messages": [
+      {
+        "id": "open",
+        "from": "browser",
+        "to": "html",
+        "y": 205,
+        "label": "读取 HTML",
+        "variant": "emphasis"
+      },
+      {
+        "id": "data",
+        "from": "html",
+        "to": "browser",
+        "y": 260,
+        "label": "基础标签与 JSON 数据",
+        "variant": "return"
+      },
+      {
+        "id": "request",
+        "from": "browser",
+        "to": "assets",
+        "y": 335,
+        "label": "加载 archify.js / archify.css",
+        "variant": "emphasis"
+      },
+      {
+        "id": "resource",
+        "from": "assets",
+        "to": "browser",
+        "y": 390,
+        "label": "返回同版本资源",
+        "variant": "return"
+      },
+      {
+        "id": "mount",
+        "from": "browser",
+        "to": "runtime",
+        "y": 465,
+        "label": "运行 JS 并读取数据块",
+        "variant": "emphasis"
+      },
+      {
+        "id": "result",
+        "from": "runtime",
+        "to": "browser",
+        "y": 525,
+        "label": "生成 SVG 与交互界面",
+        "variant": "return"
+      },
+      {
+        "id": "interaction",
+        "from": "browser",
+        "to": "runtime",
+        "y": 580,
+        "label": "缩放、聚焦与路径查看",
+        "variant": "default"
+      },
+      {
+        "id": "update",
+        "from": "runtime",
+        "to": "browser",
+        "y": 625,
+        "label": "更新图表视图",
+        "variant": "return"
+      }
+    ],
+    "activations": [
+      {
+        "participant": "html",
+        "from": 200,
+        "to": 275,
+        "type": "frontend"
+      },
+      {
+        "participant": "assets",
+        "from": 330,
+        "to": 400,
+        "type": "cloud"
+      },
+      {
+        "participant": "runtime",
+        "from": 460,
+        "to": 635,
+        "type": "backend"
+      }
+    ],
+    "cards": [
+      {
+        "dot": "cyan",
+        "title": "无需单独获取 JSON",
+        "items": [
+          "图表数据已经内嵌到 HTML 的 archify-data 标签里。",
+          "本图只演示公共 JS/CSS 的资源加载，不需要请求独立 JSON 文件。"
+        ]
+      },
+      {
+        "dot": "emerald",
+        "title": "本地与线上",
+        "items": [
+          "这份示例引用同目录资源，可以本地直接打开。",
+          "改用完整 HTTPS 地址后，HTML 可以单独发送，浏览器自动加载公共资源。"
+        ]
+      },
+      {
+        "dot": "violet",
+        "title": "版本一致",
+        "items": [
+          "数据块 runtimeVersion、JS 和 CSS 必须使用同一查看器版本。",
+          "资源不可访问时，页面无法完成图表加载。"
+        ]
+      }
+    ]
+  },
+  "dataflow": {
+    "schema_version": 1,
+    "diagram_type": "dataflow",
+    "meta": {
+      "title": "Archify：从图表数据到可交互页面",
+      "subtitle": "Archify 演示 · 图表内容与公共资源分离",
+      "locale": "zh-CN",
+      "output": "archify-transform.dataflow.html",
+      "animation": "trace",
+      "viewBox": [
+        1140,
+        470
+      ]
+    },
+    "stages": [
+      {
+        "label": "输入数据"
+      },
+      {
+        "label": "解析校验"
+      },
+      {
+        "label": "布局编译"
+      },
+      {
+        "label": "图形输出"
+      },
+      {
+        "label": "交互展示"
+      }
+    ],
+    "nodes": [
+      {
+        "id": "json",
+        "type": "database",
+        "label": "图表 JSON",
+        "sublabel": "内嵌于 HTML",
+        "stage": 0,
+        "row": 0,
+        "tag": "内容"
+      },
+      {
+        "id": "parse",
+        "type": "security",
+        "label": "类型与版本",
+        "sublabel": "结构、ID 与引用",
+        "stage": 1,
+        "row": 0,
+        "tag": "校验"
+      },
+      {
+        "id": "layout",
+        "type": "backend",
+        "label": "图表编译器",
+        "sublabel": "坐标、连线与标签",
+        "stage": 2,
+        "row": 0,
+        "tag": "五种类型"
+      },
+      {
+        "id": "svg",
+        "type": "frontend",
+        "label": "SVG 图形",
+        "sublabel": "节点与连接关系",
+        "stage": 3,
+        "row": 0,
+        "tag": "可缩放"
+      },
+      {
+        "id": "viewer",
+        "type": "frontend",
+        "label": "统一查看器",
+        "sublabel": "交互与页面导出",
+        "stage": 4,
+        "row": 0,
+        "tag": "JS + CSS"
+      }
+    ],
+    "flows": [
+      {
+        "id": "input",
+        "from": "json",
+        "to": "parse",
+        "label": "图表数据",
+        "classification": "结构化输入",
+        "variant": "emphasis"
+      },
+      {
+        "id": "valid",
+        "from": "parse",
+        "to": "layout",
+        "label": "有效数据",
+        "classification": "已校验",
+        "variant": "emphasis"
+      },
+      {
+        "id": "render",
+        "from": "layout",
+        "to": "svg",
+        "label": "图形标记",
+        "classification": "SVG",
+        "variant": "emphasis"
+      },
+      {
+        "id": "show",
+        "from": "svg",
+        "to": "viewer",
+        "label": "图形与元数据",
+        "classification": "渲染结果",
+        "variant": "emphasis"
+      }
+    ],
+    "cards": [
+      {
+        "dot": "cyan",
+        "title": "数据与样式分离",
+        "items": [
+          "修改 JSON 就能改变图表内容；无需为每张图复制查看器代码。",
+          "不同图表类型使用各自的数据结构，共用同一套资源地址。"
+        ]
+      },
+      {
+        "dot": "emerald",
+        "title": "编译过程",
+        "items": [
+          "数据校验检查结构、节点标识与连线引用。",
+          "对应类型的编译器计算布局并输出 SVG。"
+        ]
+      },
+      {
+        "dot": "violet",
+        "title": "查看器能力",
+        "items": [
+          "SVG 进入统一页面后，可缩放、聚焦、查看路径和导出。",
+          "CSS 为页面和图表提供一致的显示样式。"
+        ]
+      }
+    ]
+  },
+  "lifecycle": {
+    "schema_version": 1,
+    "diagram_type": "lifecycle",
+    "meta": {
+      "title": "Archify 资源版本的生命周期",
+      "subtitle": "Archify 演示 · 图表内容与公共资源分离",
+      "locale": "zh-CN",
+      "output": "archify-release.lifecycle.html",
+      "animation": "trace",
+      "viewBox": [
+        1120,
+        590
+      ]
+    },
+    "lanes": [
+      {
+        "id": "main",
+        "label": "当前版本"
+      },
+      {
+        "id": "next",
+        "label": "后续版本"
+      }
+    ],
+    "states": [
+      {
+        "id": "draft",
+        "type": "start",
+        "label": "准备版本",
+        "sublabel": "整理 JS / CSS",
+        "lane": "main",
+        "col": 0,
+        "step": "01",
+        "tag": "可修改"
+      },
+      {
+        "id": "check",
+        "type": "decision",
+        "label": "验证通过",
+        "sublabel": "图表、交互与资源",
+        "lane": "main",
+        "col": 1,
+        "step": "02",
+        "tag": "待发布"
+      },
+      {
+        "id": "published",
+        "type": "success",
+        "label": "正式发布",
+        "sublabel": "固定版本目录",
+        "lane": "main",
+        "col": 2,
+        "step": "03",
+        "tag": "内容冻结"
+      },
+      {
+        "id": "retained",
+        "type": "waiting",
+        "label": "保留旧版",
+        "sublabel": "已有 HTML 继续引用",
+        "lane": "main",
+        "col": 3,
+        "step": "04",
+        "tag": "兼容已有页面"
+      },
+      {
+        "id": "next",
+        "type": "active",
+        "label": "准备新版本",
+        "sublabel": "新增版本目录",
+        "lane": "next",
+        "col": 0,
+        "tag": "独立验证"
+      },
+      {
+        "id": "upgrade",
+        "type": "success",
+        "label": "新版页面",
+        "sublabel": "更新资源与版本声明",
+        "lane": "next",
+        "col": 2,
+        "tag": "选择升级"
+      }
+    ],
+    "transitions": [
+      {
+        "id": "iterate",
+        "from": "published",
+        "to": "next",
+        "label": "功能迭代",
+        "labelAt": [
+          402,
+          240
+        ],
+        "variant": "dashed",
+        "fromSide": "bottom",
+        "toSide": "top",
+        "route": "straight"
+      },
+      {
+        "id": "upgrade",
+        "from": "next",
+        "to": "upgrade",
+        "label": "发布后使用",
+        "labelAt": [
+          556,
+          295
+        ],
+        "variant": "emphasis"
+      }
+    ],
+    "cards": [
+      {
+        "dot": "cyan",
+        "title": "发布后保留旧资源",
+        "items": [
+          "已发布目录保持不变，已有 HTML 的资源地址继续有效。",
+          "新功能使用新的版本目录，不覆盖旧版 JS/CSS。"
+        ]
+      },
+      {
+        "dot": "emerald",
+        "title": "页面按需升级",
+        "items": [
+          "升级页面时同步修改 JS、CSS 地址与 runtimeVersion。",
+          "检查目标版本的数据格式，并重新验证图表。"
+        ]
+      },
+      {
+        "dot": "violet",
+        "title": "两种版本号",
+        "items": [
+          "查看器版本标识公共 JS/CSS 的版本。",
+          "schema_version 标识图表数据格式，二者分别管理。"
+        ]
+      }
+    ]
+  }
+}</script>
+  <script>
+    (() => {
+      const byId = id => document.getElementById(id);
+      const samples = JSON.parse(byId('samples').textContent);
+      const canonical = 'https://sonder9999.github.io/archify_pages/embed/0.1.0/';
+      const parts = ['Motion','Export','Search','Fullscreen','Title','Theme','Preset','Notes','Index'];
+      const colorKeys = ['surface','text','accent','muted','border'];
+      let accepted = samples.architecture;
+      let acceptedOptions = {height:560};
+      let snippet = '';
+      let busy = false;
+      let element;
+      const status = (id, message, error = false) => {byId(id).textContent = message;byId(id).dataset.error = String(error);};
+      const safeJson = value => JSON.stringify(value, null, 2).replaceAll('<', '\\u003c');
+      const attribute = value => value.replaceAll('&', '&amp;').replaceAll('"', '&quot;').replaceAll("'", '&#39;').replaceAll('<', '&lt;').replaceAll('>', '&gt;');
+      const closingScript = '</' + 'script>';
+      byId('resource-base').value = /^https?:$/.test(location.protocol) ? new URL('./', location.href).href : canonical;
+      byId('json').value = JSON.stringify(accepted, null, 2);
+
+      function optionsFromForm() {
+        const options = {height:Number(byId('height').value)};
+        if(byId('theme').value !== 'auto') options.theme = byId('theme').value;
+        if(byId('palette').value === 'hotaru') options.colorTheme = 'hotaru';
+        if(byId('palette').value === 'custom') options.colors = Object.fromEntries(colorKeys.map(key => [key, byId(key).value]));
+        if(!byId('motion').checked) options.motion = 'still';
+        for(const part of parts) {
+          const show = byId('show' + part).checked;
+          if(part === 'Fullscreen' ? !show : show) options['show' + part] = show;
+        }
+        return options;
+      }
+      function fullOptions(options) {
+        return {theme:'auto',motion:'auto',colorTheme:null,colors:null,...Object.fromEntries(parts.map(part => ['show' + part, part === 'Fullscreen'])),...options};
+      }
+      function syncSnippet() {
+        try {
+          const raw = byId('resource-base').value.trim();
+          const url = new URL(raw);
+          if(!/^https?:$/.test(url.protocol) || url.username || url.password || url.search || url.hash) throw new Error('请填写不含账号、查询或锚点的 HTTP(S) 版本目录地址。');
+          const base = url.href.replace(/\/?$/, '/');
+          snippet = '<script src="' + attribute(base + 'archify-embed.js') + '" defer>' + closingScript + '\n' +
+            '<script type="application/json" data-archify data-options=\'' + attribute(JSON.stringify(acceptedOptions)) + '\'>\n' + safeJson(accepted) + '\n' + closingScript;
+          byId('snippet').textContent = snippet;
+          byId('copy-snippet').disabled = false;
+          status('copy-status', '代码对应已应用的图表和参数。');
+        } catch(error) {
+          snippet = '';byId('copy-snippet').disabled = true;
+          status('copy-status', error.message, true);
+        }
+      }
+      function syncInfo() {
+        byId('diagram-info').textContent = accepted.diagram_type + ' · schema ' + accepted.schema_version;
+        byId('stage').dataset.hostTheme = acceptedOptions.theme || 'dark';
+        syncSnippet();
+      }
+      async function apply(data, options) {
+        if(busy || !element || !byId('settings').reportValidity()) return;
+        busy = true;
+        for(const id of ['apply-options','apply-json','sample','reset-json']) byId(id).disabled = true;
+        status('preview-status', '正在应用…');
+        try {
+          await element.ready;
+          await element.setDiagram(data);
+          await element.setOptions(fullOptions(options));
+          accepted = data;acceptedOptions = options;
+          byId('preview-data').textContent = safeJson(data);
+          syncInfo();
+          // Toolbar/height changes trigger the viewer's resize layout. Fit only
+          // after that layout settles so the playground shows the whole sample.
+          await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+          element.fit();status('preview-status', '已应用 · ' + data.meta.title);
+        } catch(error) {
+          status('preview-status', '未应用：' + error.message, true);
+        } finally {
+          busy = false;
+          for(const id of ['apply-options','apply-json','sample','reset-json']) byId(id).disabled = false;
+        }
+      }
+      byId('settings').addEventListener('submit', event => {event.preventDefault();apply(accepted, optionsFromForm());});
+      byId('palette').addEventListener('change', () => {byId('colors').hidden = byId('palette').value !== 'custom';});
+      byId('sample').addEventListener('change', () => {
+        const data = samples[byId('sample').value];byId('json').value = JSON.stringify(data, null, 2);
+        apply(data, optionsFromForm());
+      });
+      byId('reset-json').addEventListener('click', () => {byId('json').value = JSON.stringify(samples[byId('sample').value], null, 2);});
+      byId('apply-json').addEventListener('click', () => {
+        if(!byId('settings').reportValidity()) return;
+        try {apply(JSON.parse(byId('json').value), optionsFromForm());}
+        catch(error) {status('preview-status', 'JSON 解析失败：' + error.message, true);}
+      });
+      byId('resource-base').addEventListener('input', syncSnippet);
+      byId('pages-base').addEventListener('click', () => {byId('resource-base').value = canonical;syncSnippet();});
+      byId('copy-snippet').addEventListener('click', async () => {
+        try {
+          if(!snippet) return;
+          if(!navigator.clipboard?.writeText) throw new Error('浏览器未提供剪贴板权限，请从代码框手动复制。');
+          await navigator.clipboard.writeText(snippet);status('copy-status', '已复制。粘贴到 Markdown 正文，保留原始 HTML 标签。');
+        } catch(error) {status('copy-status', '复制失败：' + error.message, true);}
+      });
+      document.addEventListener('DOMContentLoaded', async () => {
+        element = byId('stage').querySelector('archify-diagram');
+        if(!element?.ready) {status('preview-status', '资源加载失败。请通过 HTTP(S) 打开，并检查同目录 JS / CSS / 字体。', true);return;}
+        try {await element.ready;syncInfo();status('preview-status', '已加载 · ' + accepted.meta.title);}
+        catch(error) {status('preview-status', '预览失败：' + error.message, true);}
+      });
+    })();
+  </script>
+</body>
+</html>

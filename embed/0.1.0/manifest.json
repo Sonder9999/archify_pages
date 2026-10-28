@@ -1,0 +1,33 @@
+{
+  "embedVersion": "0.1.0",
+  "schemaVersions": [
+    1,
+    2
+  ],
+  "schemaVersionsByType": {
+    "architecture": [
+      1
+    ],
+    "workflow": [
+      1,
+      2
+    ],
+    "sequence": [
+      1
+    ],
+    "dataflow": [
+      1
+    ],
+    "lifecycle": [
+      1,
+      2
+    ]
+  },
+  "diagramTypes": [
+    "architecture",
+    "workflow",
+    "sequence",
+    "dataflow",
+    "lifecycle"
+  ]
+}

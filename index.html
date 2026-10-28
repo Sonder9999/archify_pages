@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Archify 图表演示与使用入口：五种图表，共用 JS/CSS，以 HTML 分享或通过 iframe 嵌入。">
+  <meta name="description" content="Archify 图表演示与使用入口：五种图表，通过 Embed 在文章内嵌入 JSON，或通过 Runtime 分享独立 HTML 页面。">
   <title>Archify · 演示与使用</title>
   <style>
     :root{color-scheme:dark;--bg:#0b1018;--panel:#121925;--line:#283243;--text:#edf2f8;--muted:#a3afc1;--accent:#54d4cf}
@@ -19,6 +19,7 @@
     footer{display:flex;justify-content:space-between;gap:20px;border-top:1px solid var(--line);padding:22px 0 30px;font-size:12px;color:var(--muted)}footer a:hover{color:var(--text)}.status{position:fixed;left:50%;bottom:25px;transform:translateX(-50%);border-radius:8px;background:#263145;border:1px solid #45516a;color:var(--text);padding:10px 18px;font-size:13px;z-index:2}.status:empty{display:none}
     @media(max-width:1000px){.hero{gap:30px}.demos{grid-template-columns:repeat(3,minmax(0,1fr))}.demo svg{max-width:180px}.hero h1{font-size:38px}}
     @media(max-width:650px){.wrap{width:calc(100% - 32px)}header{padding:21px 0}nav{gap:17px}.hero{grid-template-columns:1fr;gap:28px;padding:38px 0}.hero h1{font-size:34px}.pipeline{padding:23px}.demos{grid-template-columns:repeat(2,minmax(0,1fr))}.demo{padding:15px}.section-head{align-items:start}.section-head p{max-width:230px}.version{flex-direction:column;align-items:end;gap:5px}.asset-list{grid-template-columns:1fr}.asset:first-child{border-right:0}.asset-config,.asset{padding:18px}.snippet-head{padding:13px 18px}.snippet{margin:0 18px 14px}.snippet-note{padding:0 18px 18px}.principles{gap:7px 18px}section{margin-bottom:38px}footer{flex-wrap:wrap}}
+    @media(max-width:650px){header{flex-wrap:wrap}nav{flex-wrap:wrap}.hero-links{flex-wrap:wrap}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.demo{transition:none}.demo:hover{transform:none}}
     @media(max-width:360px){.snippet-head{padding:13px 12px;gap:6px}.tabs{gap:2px}.tabs button{padding:6px 8px;font-size:12px}.snippet-head .copy{padding:4px 8px;white-space:nowrap}}
   </style>
@@ -27,14 +28,14 @@
   <div class="wrap">
     <header>
       <a class="brand" href="./index.html" aria-label="Archify 首页"><svg viewBox="0 0 30 30" aria-hidden="true"><path d="M7 8h16M7 8v15h16" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="3" y="4" width="8" height="8" rx="2" fill="currentColor"/><rect x="19" y="4" width="8" height="8" rx="2" fill="currentColor" opacity=".45"/><rect x="19" y="19" width="8" height="8" rx="2" fill="currentColor" opacity=".8"/></svg>Archify</a>
-      <nav aria-label="主导航"><a href="#demos">图表演示</a><a href="#usage">使用方式</a></nav>
+      <nav aria-label="主导航"><a href="embed/0.1.0/index.html">文章内嵌</a><a href="#demos">图表演示</a><a href="#usage">使用方式</a></nav>
     </header>
     <main>
       <div class="hero">
         <div>
           <p class="eyebrow">DIAGRAMS, SHARED RUNTIME</p>
           <h1>图表内容，统一展示。</h1>
-          <p class="intro">用 JSON 描述图表，以 HTML 分享。五种图表共用同一套 JS 与 CSS，也能通过 iframe 嵌入网页与博客。</p>
+          <p class="intro">用 JSON 描述五种图表，以 HTML 分享，或直接嵌入文章正文。公共 JS 与 CSS 统一提供显示、主题与交互。</p>
           <div class="hero-links"><a class="primary" href="#demos">查看演示 <span aria-hidden="true">↗</span></a><a class="secondary" href="#usage">复制引用方式 →</a></div>
         </div>
         <div class="pipeline" aria-label="JSON 内嵌于 HTML，由公共 JS 和 CSS 展示为图表">
@@ -43,6 +44,10 @@
           <div class="shared"><span>公共资源</span><code>JS</code><span>+</span><code>CSS</code></div>
         </div>
       </div>
+      <section id="embed" aria-labelledby="embed-heading">
+        <div class="section-head"><div><h2 id="embed-heading">直接嵌入文章正文</h2><p>引入一次脚本，放入完整 JSON；样式、主题与按钮由公共库和参数管理。</p></div></div>
+        <div class="pipeline"><div class="pipeline-title"><span>ARCHIFY EMBED</span><span>0.1.0</span></div><p class="intro">无需博客插件或初始化代码，同页可放多张图。默认启用动态，隐藏动态、导出、搜索入口；支持 Hotaru 配色与自定义颜色。</p><div class="hero-links"><a class="primary" href="embed/0.1.0/index.html">预览与复制正文 <span aria-hidden="true">↗</span></a><a class="secondary" href="embed/0.1.0/README.md">参数说明 →</a></div></div>
+      </section>
       <section id="demos" aria-labelledby="demos-heading">
         <div class="section-head"><div><h2 id="demos-heading">五种图表，一套体验</h2><p>用 Archify 的组成与使用过程，了解每一种图。</p></div><label class="version" for="version">资源版本<select id="version"><option value="0.1.0">0.1.0</option></select></label></div>
         <div class="demos">
@@ -69,7 +74,7 @@
         </div>
       </section>
       <section id="usage" aria-labelledby="usage-heading">
-        <div class="section-head"><div><h2 id="usage-heading">接入你的页面</h2><p>引用公共资源，再放入自己的图表 JSON。</p></div></div>
+        <div class="section-head"><div><h2 id="usage-heading">Runtime · 独立页面</h2><p>分享 HTML 或使用 iframe；文章内 JSON 嵌入请使用上方 Embed。</p></div></div>
         <div class="usage">
           <div class="asset-config"><label for="asset-base">资源根地址</label><div class="address"><input id="asset-base" type="url" value="https://static.example.com/archify" spellcheck="false" autocomplete="off" aria-describedby="base-help"></div><p class="helper" id="base-help">替换为实际资源地址；以下链接和代码会一起更新。</p></div>
           <div class="asset-list">
